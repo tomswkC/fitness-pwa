@@ -7,19 +7,18 @@
 // offline edits and reconcile on the next sync.
 const SCOPE = new URL(self.registration.scope);
 const CACHE_PREFIX = `tracker-personal:${SCOPE.href}:`;
-const CACHE = `${CACHE_PREFIX}v5`;
+const CACHE = `${CACHE_PREFIX}v6`;
 const INDEX = new URL('index.html', SCOPE).href;
 const SHELL = [
   './',
   'index.html',
   'personal-data.js?v=5',
-  'manifest.json',
-  'favicon.svg',
-  'favicon.ico',
-  'icons/icon-192.png',
-  'icons/icon-512.png',
-  'icons/icon-maskable-512.png',
-  'icons/apple-touch-icon.png',
+  'manifest.json?v=2',
+  'favicon.ico?v=2',
+  'icons/icon-192.png?v=2',
+  'icons/icon-512.png?v=2',
+  'icons/icon-maskable-512.png?v=2',
+  'icons/apple-touch-icon.png?v=2',
 ].map((path) => new URL(path, SCOPE).href);
 
 self.addEventListener('install', (event) => {
