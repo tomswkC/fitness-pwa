@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#f4f3ee" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <link rel="icon" href="./favicon.ico" sizes="any">
@@ -17,8 +17,9 @@
 <style>
 :root {
   color-scheme: light dark;
-  --bg: light-dark(#fff, #171819);
-  --surface2: light-dark(#f5f5f3, #232526);
+  --bg: light-dark(#f4f3ee, #171819);
+  --surface: light-dark(#fff, #202221);
+  --surface2: light-dark(#f6f6f2, #292c2a);
   --text: light-dark(#202321, #eeefed);
   --muted: light-dark(#656962, #abafaa);
   --border: light-dark(#dedfdb, #3a3e3c);
@@ -30,14 +31,15 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--text); }
-.wrap { max-width: 640px; margin: auto; padding: calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom)); }
+.wrap { max-width: 660px; margin: auto; padding: calc(18px + env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom)); }
 h1, h2, h3, p { margin: 0; }
 h1 { font-size: 24px; }
 h2, h3 { font-size: 16px; }
-.tabs { display: flex; border-bottom: 1px solid var(--border); margin: 8px 0 20px; position: sticky; top: env(safe-area-inset-top); z-index: 2; background: var(--bg); }
+.hero { margin-bottom: 16px; }
+.tabs { display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 2; background: var(--surface); border-top: 1px solid var(--border); padding: 3px max(12px, calc((100% - 660px) / 2)) calc(3px + env(safe-area-inset-bottom)); }
 button, .filebtn { font: inherit; font-weight: 600; min-height: 44px; padding: 0 12px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; }
-.tab { flex: 1; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: var(--muted); }
-.tab.active { border-bottom-color: var(--accent); color: var(--text); }
+.tab { flex: 1; border: 0; border-top: 2px solid transparent; border-radius: 0; background: transparent; color: var(--muted); }
+.tab.active { border-top-color: var(--accent); color: var(--accent); }
 .primary { background: var(--accent); color: var(--on-accent); }
 .ghost, .filebtn { background: var(--surface2); color: var(--text); border-color: var(--border); }
 .danger { color: var(--danger); background: transparent; }
@@ -46,10 +48,36 @@ button, .filebtn { font: inherit; font-weight: 600; min-height: 44px; padding: 0
 .section { margin: 20px 0; }
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
 .section-head input[type="date"] { width: auto; max-width: 55%; }
-.overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin: 0; }
-.overview dt, .notice, .hint, small { color: var(--muted); font-size: 12px; }
-.overview dd { margin: 2px 0 0; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.overview small:empty, .notice:empty, .hint:empty { display: none; }
+.notice, .hint, small { color: var(--muted); font-size: 12px; }
+small:empty, .notice:empty, .hint:empty { display: none; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px; }
+.dashboard-head, .dialog-head, .meal-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.dashboard-head { margin-bottom: 12px; }
+.energy-layout { display: grid; grid-template-columns: minmax(140px, 1fr) minmax(0, 1fr); gap: 14px; align-items: center; margin-top: 10px; }
+.energy-ring { position: relative; width: min(100%, 184px); margin: auto; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--accent) var(--progress, 0%), var(--surface2) 0); display: grid; place-items: center; text-align: center; }
+.energy-ring::before { content: ''; position: absolute; inset: 10px; border-radius: 50%; background: var(--surface); }
+.energy-ring > div { position: relative; }
+.metric { display: block; font-size: 24px; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.side-stat + .side-stat { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.side-stat strong { display: block; font-size: 16px; }
+.goal-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 4px; }
+.goal-row strong { font-size: 14px; }
+.meal-groups { display: grid; gap: 10px; }
+.meal-head .ghost { min-width: 44px; padding: 0 9px; color: var(--accent); }
+.meal-group .record-row:last-child, .card > .record-row:last-child { border-bottom: 0; }
+.meal-group .record-row { justify-content: space-between; }
+.day-total { margin: 0 0 12px; }
+.dialog-head { margin-bottom: 12px; }
+dialog { width: min(calc(100% - 24px), 500px); max-height: calc(100dvh - 32px); padding: 16px; border: 1px solid var(--border); border-radius: 16px; color: var(--text); background: var(--surface); overflow: auto; }
+dialog::backdrop { background: rgb(0 0 0 / .42); }
+dialog .toolbar { margin-top: 12px; }
+.dialog-head .ghost { flex-shrink: 0; }
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.choice { text-align: left; }
+.choice small { display: block; }
+.trend-controls { display: flex; gap: 4px; }
+.trend-controls button[aria-pressed="true"] { background: var(--surface2); color: var(--accent); border-color: var(--border); }
+@media (min-width: 560px) { .meal-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .formgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: end; }
 .field label { display: block; margin-bottom: 3px; color: var(--muted); font-size: 12px; }
 input:not([type="checkbox"]), select { width: 100%; min-width: 0; min-height: 44px; padding: 0 9px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text); font: inherit; font-size: 16px; }
@@ -60,10 +88,6 @@ input:not([type="checkbox"]), select { width: 100%; min-width: 0; min-height: 44
 .quick-buttons { margin-top: 4px; }
 .checkline { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
 .checkline input { accent-color: var(--accent); width: 18px; height: 18px; }
-.compact { border-bottom: 1px solid var(--border); }
-.compact[open] { padding-bottom: 12px; }
-.compact > .field { margin-bottom: 8px; }
-summary { cursor: pointer; font-weight: 600; padding: 12px 0; }
 .notice, .hint { margin: 4px 0; }
 .record-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; border-bottom: 1px solid var(--border); padding: 8px 0; }
 .record-row p { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -79,34 +103,46 @@ summary { cursor: pointer; font-weight: 600; padding: 12px 0; }
 </head>
 <body>
 <div class="app"><main class="wrap">
-<header class="hero"><h1>健身记录</h1></header>
+<header class="hero"><h1 id="pageTitle">健身记录</h1></header>
 
-<nav class="tabs" aria-label="页面导航"><button class="tab active" data-tab="dashboard">首页</button><button class="tab" data-tab="diary">饮食</button><button class="tab" data-tab="workouts">运动</button><button class="tab" data-tab="settings">更多</button></nav>
+<nav class="tabs" aria-label="页面导航"><button class="tab active" data-tab="dashboard">首页</button><button class="tab" data-tab="diary">饮食</button><button class="tab" data-tab="workouts">运动</button><button class="tab" data-tab="history">趋势</button><button class="tab" data-tab="settings">更多</button></nav>
 
 <!-- ============ DASHBOARD ============ -->
 <section class="panel" id="panel-dashboard">
-<dl class="overview" aria-label="记录概览">
-<div><dt>最近体重</dt><dd id="currentWeight">—</dd></div>
-<div><dt>今日热量</dt><dd id="todayCalories">—</dd><small id="todayCoverage"></small></div>
-<div><dt>今日蛋白质</dt><dd id="todayProtein">—</dd><small id="todayProteinCoverage"></small></div>
-</dl>
-<section class="section">
-<div class="section-head"><h2>称重</h2><input id="date" type="date" aria-label="称重日期"></div>
-<div class="inline-form"><input id="weight" class="dec" inputmode="decimal" aria-label="体重（kg）" placeholder="体重（kg）"><button class="primary" id="save">保存</button></div>
-<details class="compact"><summary>填写全天热量</summary><div class="field"><label for="calories">全天热量（kcal，替代逐餐合计）</label><input id="calories" class="int" inputmode="numeric"></div><button class="ghost" id="saveCalories" type="button">保存热量</button></details>
-<p class="notice" id="entryFeedback" role="status"></p></section>
-<section class="section" id="weightChart"><div class="section-head"><h2>体重趋势</h2><span class="notice" id="avgWeight"></span></div><div class="chart-wrap"><canvas class="chart" id="chart" aria-label="已记录的体重变化"></canvas></div></section>
+<section class="card" aria-labelledby="todayTitle">
+<div class="dashboard-head"><div><h2 id="todayTitle">今日饮食</h2><small id="homeDate"></small></div><button class="ghost" data-go="diary">记一餐</button></div>
+<div class="energy-layout"><div class="energy-ring" id="energyRing"><div><strong class="metric" id="todayCalories">—</strong><small>已记热量（kcal）</small><br><small id="todayCoverage"></small></div></div>
+<div><div class="side-stat"><small>蛋白质</small><strong id="todayProtein">—</strong><small id="todayProteinCoverage"></small></div>
+<div class="side-stat"><small>今日运动</small><strong id="homeActivity">—</strong></div></div></div>
+<div class="goal-row"><strong id="goalStatus"></strong><button class="mini" id="openGoal">设置热量目标</button></div>
 </section>
+<section class="section card"><div class="section-head"><div><h2>体重趋势</h2><strong class="metric" id="currentWeight">—</strong></div><button class="primary" id="openWeight">记体重</button></div>
+<p class="notice" id="avgWeight"></p><p class="notice" id="weightEmpty">记录两次体重后显示趋势。</p>
+<div class="chart-wrap" id="weightChart" hidden><canvas class="chart" id="chart" aria-label="已记录的体重变化"></canvas></div>
+<button class="mini" data-go="history">查看趋势与历史 ›</button></section>
+</section>
+<dialog id="goalDialog" aria-labelledby="goalTitle"><div class="dialog-head"><h2 id="goalTitle">每日热量目标</h2><button class="ghost" data-close-dialog>关闭</button></div>
+<form id="goalForm" class="formgrid"><div class="field"><label for="calorieGoal">目标（kcal／天）</label><input id="calorieGoal" type="number" min="1" step="1" inputmode="numeric" placeholder="留空可清除目标"></div><div class="actions"><button class="primary" type="submit">保存目标</button></div></form></dialog>
+<dialog id="weightDialog" aria-labelledby="weightTitle"><div class="dialog-head"><h2 id="weightTitle">记体重</h2><button class="ghost" data-close-dialog>关闭</button></div>
+<div class="formgrid"><div class="field"><label for="date">日期</label><input id="date" type="date"></div><div class="field"><label for="weight">体重（kg）</label><input id="weight" class="dec" inputmode="decimal"></div><div class="actions"><button class="primary" id="save">保存体重</button></div></div>
+<p class="notice" id="entryFeedback" role="status"></p></dialog>
 
 <!-- ============ DIARIO ============ -->
 <section class="panel" id="panel-diary" hidden>
-<section class="section"><div class="section-head"><h2>记一餐</h2><input id="diaryDate" type="date" aria-label="饮食日期"></div><form id="quickMealForm" class="formgrid">
+<div class="section-head"><input id="diaryDate" type="date" aria-label="饮食日期"><button class="ghost" id="openCalories">填写全天热量</button></div>
+<p class="notice day-total" id="diaryTotal"></p><div id="diaryItems" class="meal-groups"></div>
+</section>
+<dialog id="caloriesDialog" aria-labelledby="caloriesTitle"><div class="dialog-head"><h2 id="caloriesTitle">全天热量</h2><button class="ghost" data-close-dialog>关闭</button></div>
+<div class="field"><label for="calories">全天估算（kcal）</label><input id="calories" class="int" inputmode="numeric"></div>
+<p class="notice">填写后用全天估算替代逐餐热量合计。清空后恢复逐餐合计。</p><div class="toolbar"><button class="primary" id="saveCalories">保存热量</button></div></dialog>
+<dialog id="mealDialog" aria-labelledby="mealDialogTitle"><div class="dialog-head"><h2 id="mealDialogTitle">记一餐</h2><button class="ghost" data-close-dialog>关闭</button></div><form id="quickMealForm" class="formgrid">
 <div class="field"><label for="quickMealSlot">餐次</label><select id="quickMealSlot"><option>早餐</option><option>午餐</option><option>晚餐</option><option>加餐</option></select></div>
 <div class="field"><label for="quickMealName">吃了什么</label><input id="quickMealName" placeholder="选填"></div>
 <div class="field"><label for="quickMealCalories">热量（kcal）</label><input id="quickMealCalories" class="int" inputmode="numeric" placeholder="选填"></div>
 <div class="field"><label for="quickMealProtein">蛋白质（g）</label><input id="quickMealProtein" class="dec" inputmode="decimal" placeholder="选填"></div>
-<div class="actions"><button class="primary" type="submit">保存这餐</button><label class="checkline"><input id="quickMealRemember" type="checkbox" disabled>存为常用</label><p class="notice" id="mealFeedback" role="status"></p></div></form></section>
-<details class="compact"><summary>常用晚餐</summary><form id="dinnerForm" class="formgrid">
+<div class="actions"><button class="primary" type="submit">保存这餐</button><label class="checkline"><input id="quickMealRemember" type="checkbox" disabled>存为常用</label><p class="notice" id="mealFeedback" role="status"></p></div></form>
+<div class="toolbar"><button class="ghost" id="openDiaryLibrary">从常用库添加</button><button class="ghost" id="openDinner" hidden>使用常用晚餐</button></div></dialog>
+<dialog id="dinnerDialog" aria-labelledby="dinnerTitle"><div class="dialog-head"><h2 id="dinnerTitle">常用晚餐</h2><button class="ghost" data-close-dialog>关闭</button></div><form id="dinnerForm" class="formgrid">
 <div class="field"><label for="dinnerVegetable">蔬菜</label><select id="dinnerVegetable"><option value="usual-broccoli">西兰花</option><option value="usual-cabbage">包菜</option></select></div>
 <div class="field"><label for="dinnerVegetableAmount">蔬菜生重（g，可不填）</label><input id="dinnerVegetableAmount" class="dec" inputmode="decimal" value="225"></div>
 <div class="field"><label for="dinnerMeat">肉类</label><select id="dinnerMeat"><option value="usual-breast">鸡胸肉</option><option value="usual-leg">鸡腿肉</option></select></div>
@@ -117,30 +153,31 @@ summary { cursor: pointer; font-weight: 600; padding: 12px 0; }
 <div class="field"><label for="dinnerProtein">整餐蛋白质（g）</label><input id="dinnerProtein" class="dec" inputmode="decimal" placeholder="选填"></div>
 <div class="field"><label for="dinnerExtra">主食或其他补充（可不填）</label><input id="dinnerExtra" placeholder="偶尔吃主食时补一句"></div>
 <div class="actions"><button class="primary" type="submit">记下这顿晚餐</button><button class="ghost" id="saveDinnerDefault" type="button">设为常用组合</button></div></form>
-<p class="notice" id="dinnerPreview"></p><p class="notice" id="dinnerFeedback" role="status"></p></details>
-<details class="compact" id="diarySection"><summary>从常用库添加</summary><div class="formgrid">
+<p class="notice" id="dinnerPreview"></p><p class="notice" id="dinnerFeedback" role="status"></p></dialog>
+<dialog id="diarySection" aria-labelledby="libraryMealTitle"><div class="dialog-head"><h2 id="libraryMealTitle">从常用库添加</h2><button class="ghost" data-close-dialog>关闭</button></div><div class="formgrid">
+<div class="field"><label for="diaryMeal">餐次</label><select id="diaryMeal"><option>早餐</option><option>午餐</option><option>晚餐</option><option>加餐</option></select></div>
 <div class="field"><label for="diaryFood">食物或常用餐</label><input id="diaryFood" list="foodOptions" placeholder="搜索常用库"><datalist id="foodOptions"></datalist></div>
 <div class="field"><label for="diaryGrams" id="diaryAmountLabel">份量（g／个／份）</label><input id="diaryGrams" class="dec" inputmode="decimal" placeholder="份量不清楚可留空"><div class="hint" id="gramsHint"></div></div>
-<div class="actions"><button class="primary" id="diaryAdd">添加</button></div></div><p class="notice" id="diaryFeedback" role="status"></p></details>
-<section class="section"><h2>当天饮食</h2><p class="notice" id="diaryTotal"></p><div id="diaryItems"></div></section>
-</section>
+<div class="actions"><button class="primary" id="diaryAdd">添加</button></div></div><p class="notice" id="diaryFeedback" role="status"></p></dialog>
 
 <!-- ============ ALLENAMENTI ============ -->
 <section class="panel" id="panel-workouts" hidden>
-<section class="section"><div class="section-head"><h2>记运动</h2><input id="workoutDate" type="date" aria-label="运动日期"></div><div id="workoutBody"></div></section>
-<section class="section"><h2>当天运动</h2><div id="activityHistory"></div></section>
-<details class="card section"><summary>管理常用运动</summary><h3 id="workoutFormTitle" class="section">添加运动项目</h3>
+<div class="section-head"><input id="workoutDate" type="date" aria-label="运动日期"><button class="ghost" id="openWorkoutManager">管理项目</button></div>
+<section class="section card"><h2>常用运动</h2><div id="workoutBody" class="choices"></div></section>
+<section class="section card"><h2>当天运动</h2><div id="activityHistory"></div></section>
+</section>
+<dialog id="activityDialog" aria-labelledby="activityTitle"><div class="dialog-head"><h2 id="activityTitle">记运动</h2><button class="ghost" data-close-dialog>关闭</button></div><div id="activityEditor"></div></dialog>
+<dialog id="workoutManager" aria-labelledby="workoutManagerTitle"><div class="dialog-head"><h2 id="workoutManagerTitle">管理常用运动</h2><button class="ghost" data-close-dialog>关闭</button></div><div id="workoutEditList" class="toolbar"></div><h3 id="workoutFormTitle" class="section">添加运动项目</h3>
 <form id="workoutForm" class="formgrid"><div class="field"><label for="wName">运动名称</label><input id="wName" placeholder="例如：爬楼" required></div>
 <div class="field"><label for="wType">记录方式</label><select id="wType"><option value="floors">层数</option><option value="interval">跑走轮数</option><option value="seconds">秒数</option><option value="reps">次数</option><option value="minutes">分钟</option></select></div>
 <div class="field"><label for="wNotes">默认备注（可不填）</label><input id="wNotes" placeholder="按自己的完成情况记录"></div>
 <div class="actions"><button class="primary" id="workoutSubmit" type="submit">添加运动项目</button><button class="ghost" id="workoutCancel" type="button" hidden>取消编辑</button></div></form>
-<div class="toolbar section"><button class="ghost" id="loadDefaultWorkouts">补充我的常用运动</button><button class="ghost" id="exportWorkouts">导出运动库 CSV</button><label class="filebtn" for="csvWorkouts">导入运动库 CSV</label><input id="csvWorkouts" type="file" accept=".csv,text/csv" hidden></div><p class="notice" id="workoutFeedback" role="status"></p></details>
-</section>
+<div class="toolbar section"><button class="ghost" id="loadDefaultWorkouts">补充我的常用运动</button><button class="ghost" id="exportWorkouts">导出运动库 CSV</button><label class="filebtn" for="csvWorkouts">导入运动库 CSV</label><input id="csvWorkouts" type="file" accept=".csv,text/csv" hidden></div><p class="notice" id="workoutFeedback" role="status"></p></dialog>
 
 <!-- ============ CIBI ============ -->
 <section class="panel" id="panel-foods" hidden>
-<div class="section-head"><h2>常用库</h2><button class="ghost" data-go="settings">返回</button></div>
-<details class="compact" id="foodEditor"><summary id="foodFormTitle">添加常用食物</summary><form id="foodForm" class="formgrid">
+<div class="toolbar"><button class="primary" id="openFoodEditor">添加食物</button><button class="ghost" id="openFoodImport">导入与导出</button><button class="ghost" data-go="settings">返回</button></div>
+<dialog id="foodEditor" aria-labelledby="foodFormTitle"><div class="dialog-head"><h2 id="foodFormTitle">添加常用食物</h2><button class="ghost" data-close-dialog>关闭</button></div><form id="foodForm" class="formgrid">
 <div class="field"><label for="fName">名称</label><input id="fName" placeholder="食材、食堂常吃的一餐都可以" required></div>
 <div class="field"><label for="fUnit">计量单位</label><select id="fUnit"><option value="g">克（g）</option><option value="个">个</option><option value="份">份</option></select></div>
 <div class="field"><label for="fKcal" id="foodKcalLabel">每 100g 热量（可不填）</label><input id="fKcal" class="int" inputmode="numeric" placeholder="填标签或外部估算值"></div>
@@ -148,23 +185,26 @@ summary { cursor: pointer; font-weight: 600; padding: 12px 0; }
 <div class="field"><label for="fMin">常用份量（可不填）</label><input id="fMin" class="dec" inputmode="decimal" placeholder="例如 100，鸡蛋可填 2"></div>
 <div class="field"><label for="fNotes">备注／估算来源（可不填）</label><input id="fNotes" placeholder="例如：生重、包装标签、GPT 粗估"></div>
 <div class="actions"><button class="primary" id="foodSubmit" type="submit">存入常用库</button><button class="ghost" id="foodCancel" type="button" hidden>取消编辑</button></div></form>
-</details>
-<details class="compact"><summary>导入与导出</summary>
+</dialog>
+<dialog id="foodImportDialog" aria-labelledby="foodImportTitle"><div class="dialog-head"><h2 id="foodImportTitle">导入与导出</h2><button class="ghost" data-close-dialog>关闭</button></div>
 <div class="toolbar"><button class="ghost" id="loadDefault">补充我的常用食材</button><button class="ghost" id="exportFoods">导出常用库 CSV</button><label class="filebtn" for="csvFile">导入常用库 CSV</label><input id="csvFile" type="file" accept=".csv,text/csv" hidden><button class="ghost" id="downloadTemplate">下载导入模板</button></div><p class="notice" id="foodImportFeedback" role="status"></p>
-</details>
+</dialog>
 <section class="section">
 <div class="field"><label for="foodSearch">搜索常用库</label><input id="foodSearch" placeholder="输入食物或餐食名称"></div>
 <div id="foodRows"></div></section>
 </section>
 
 <!-- ============ STORICO ============ -->
-<section class="panel" id="panel-history" hidden><div class="section-head"><h2>历史记录</h2><button class="ghost" data-go="settings">返回</button></div><div id="rows"></div></section>
+<section class="panel" id="panel-history" hidden>
+<section class="card"><div class="section-head"><h2>体重</h2><div class="trend-controls" aria-label="趋势范围"><button class="mini" data-days="7" aria-pressed="false">7 天</button><button class="mini" data-days="30" aria-pressed="true">30 天</button><button class="mini" data-days="0" aria-pressed="false">全部</button></div></div>
+<p class="notice" id="trendSummary"></p><div class="chart-wrap" id="trendChartWrap" hidden><canvas class="chart" id="trendChart" aria-label="所选日期范围的体重趋势"></canvas></div></section>
+<section class="card section"><h2>历史记录</h2><div id="rows"></div></section></section>
 
 <!-- ============ IMPOSTAZIONI ============ -->
 <section class="panel" id="panel-settings" hidden>
-<div class="menu"><button class="ghost" data-go="history">历史记录</button><button class="ghost" data-go="foods">常用库</button></div>
+<div class="menu"><button class="ghost" data-go="foods">常用库</button><button class="ghost" id="openSync">数据同步</button></div>
 <section class="card section"><h2>备份</h2><div class="toolbar"><button class="ghost" id="exportBackup">导出备份（JSON）</button><label class="ghost filebtn" for="importBackup" style="background:var(--surface2);color:var(--text);border:1px solid var(--border)">导入备份</label><input id="importBackup" type="file" accept="application/json,.json" hidden><button class="danger" id="clear">清空体重与饮食记录</button></div><div class="notice">备份包含 <strong>体重、热量、饮食日记、食物库和运动记录</strong>。可通过“文件”、iCloud 云盘、隔空投送等方式传到另一台设备后导入。导入备份会替换当前数据。</div></section>
-<details class="card section"><summary>连接同步服务（可选）</summary><h2 class="section">数据同步 <span class="pill" id="syncPending" title="尚未同步的本地修改">0</span></h2><div class="formgrid"><div class="field"><label for="syncUrl">服务器地址</label><input id="syncUrl" placeholder="留空表示使用当前服务器"></div><div class="field"><label for="syncKey">数据集标识</label><input id="syncKey" placeholder="default"></div><div class="field"><label>自动同步</label><label class="checkline" style="height:46px"><input type="checkbox" id="syncAuto"> 自动同步</label></div><div class="actions"><button class="primary" id="syncNowBtn">立即同步</button><button class="ghost" id="syncPush">上传到服务器</button><button class="ghost" id="syncPull">从服务器更新</button></div></div><div class="notice" id="syncStatus">日常先保存在本机。只有接好配套服务后才需要开启同步。</div></details>
+<dialog id="syncDialog" aria-labelledby="syncTitle"><div class="dialog-head"><h2 id="syncTitle">数据同步 <span class="pill" id="syncPending" title="尚未同步的本地修改">0</span></h2><button class="ghost" data-close-dialog>关闭</button></div><div class="formgrid"><div class="field"><label for="syncUrl">服务器地址</label><input id="syncUrl" placeholder="留空表示使用当前服务器"></div><div class="field"><label for="syncKey">数据集标识</label><input id="syncKey" placeholder="default"></div><div class="field"><label>自动同步</label><label class="checkline" style="height:46px"><input type="checkbox" id="syncAuto"> 自动同步</label></div><div class="actions"><button class="primary" id="syncNowBtn">立即同步</button><button class="ghost" id="syncPush">上传到服务器</button><button class="ghost" id="syncPull">从服务器更新</button></div></div><div class="notice" id="syncStatus">日常先保存在本机。只有接好配套服务后才需要开启同步。</div></dialog>
 </section>
 <div class="rest-overlay" id="restOverlay" hidden><div class="rest-inner"><div class="rest-name" id="restName">组间休息</div><div class="rest-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="54"></circle><circle class="ring-fg" id="restRing" cx="60" cy="60" r="54"></circle></svg><div class="rest-time" id="restTime">0:00</div></div><div class="rest-controls"><button class="ghost" id="restMinus">−15秒</button><button class="primary" id="restToggle">暂停</button><button class="ghost" id="restPlus">+15秒</button></div><button class="ghost rest-close" id="restClose">关闭</button></div></div>
 </main></div>
@@ -226,7 +266,8 @@ function effectiveCalories(date){return summarizeDay(entryFor(date),diaryGet(dat
 function showTab(name) {
   currentTab = name;
   save(TAB_KEY, name);
-  const topTab = ['foods', 'history'].includes(name) ? 'settings' : name;
+  const topTab = name === 'foods' ? 'settings' : name;
+  $('pageTitle').textContent = ({dashboard: '健身记录', diary: '饮食日记', workouts: '运动记录', history: '趋势', foods: '常用库', settings: '更多'})[name] || '健身记录';
   document.querySelectorAll('.tab').forEach(button => {
     const active = button.dataset.tab === topTab;
     button.classList.toggle('active', active);
@@ -234,12 +275,38 @@ function showTab(name) {
   });
   document.querySelectorAll('.panel').forEach(panel => panel.hidden = panel.id !== 'panel-' + name);
   if (name === 'dashboard' && !$('weightChart').hidden) drawChart(weightEntries());
+  if (name === 'history') renderTrend();
   if (name === 'workouts') renderWorkouts();
 }
 document.querySelectorAll('.tab, [data-go]').forEach(button => button.onclick = () => {
   showTab(button.dataset.tab || button.dataset.go);
   window.scrollTo(0, 0);
 });
+document.querySelectorAll('[data-close-dialog]').forEach(button => button.onclick = () => button.closest('dialog').close());
+$('openGoal').onclick = () => {
+  $('calorieGoal').value = load('daily_calorie_goal', null) ?? '';
+  $('goalDialog').showModal();
+};
+$('goalForm').onsubmit = event => {
+  event.preventDefault();
+  save('daily_calorie_goal', numberOrNull($('calorieGoal').value));
+  $('goalDialog').close();
+  render();
+};
+$('openWeight').onclick = () => {
+  $('date').value = isoToday();
+  syncCaloriesFromDiary();
+  $('entryFeedback').textContent = '';
+  $('weightDialog').showModal();
+};
+$('openCalories').onclick = () => {
+  $('calories').value = entryFor($('diaryDate').value)?.calories ?? '';
+  $('caloriesDialog').showModal();
+};
+$('openWorkoutManager').onclick = () => $('workoutManager').showModal();
+$('openFoodEditor').onclick = () => { resetFoodForm(); $('foodEditor').showModal(); };
+$('openFoodImport').onclick = () => $('foodImportDialog').showModal();
+$('openSync').onclick = () => $('syncDialog').showModal();
 
 /* ---------- CSV ---------- */
 function detectDelimiter(text){const lines=text.split(/\r?\n/).filter(l=>l.trim()).slice(0,30);const cands=[',',';','\t'];let best=',',bestScore=-1;for(const d of cands){const counts=lines.map(l=>l.split(d).length-1);const max=Math.max(...counts,0);if(max===0)continue;const consistency=counts.filter(c=>c===max).length;const score=max*10+consistency;if(score>bestScore){bestScore=score;best=d}}return best}
@@ -290,9 +357,10 @@ function pickFood(id) {
   if (!food) return;
   $('diaryFood').value = food.name;
   $('diaryGrams').value = food.min ?? ((food.unit || 'g') === 'g' ? 100 : 1);
-  $('diarySection').open = true;
   updateGramsHint();
   showTab('diary');
+  $('diaryMeal').value = '加餐';
+  $('diarySection').showModal();
   $('diaryGrams').focus();
 }
 function renderFoods() {
@@ -318,13 +386,38 @@ function updateFoodUnit() {
   $('foodProteinLabel').textContent = basis + ' 蛋白质（g）';
 }
 function resetFoodForm(){editingFoodId=null;$('foodForm').reset();$('foodSubmit').textContent='存入常用库';$('foodCancel').hidden=true;$('foodFormTitle').textContent='添加常用食物';updateFoodUnit()}
-function editFood(id){const f=foods.find(x=>x.id===id);if(!f)return;editingFoodId=id;$('fName').value=f.name;$('fUnit').value=f.unit||'g';$('fKcal').value=f.kcal??'';$('fProtein').value=f.p??'';$('foodEditor').open=true;$('fMin').value=f.min??'';$('fNotes').value=f.notes||'';$('foodSubmit').textContent='保存修改';$('foodCancel').hidden=false;$('foodFormTitle').textContent='编辑常用内容';updateFoodUnit();$('foodForm').scrollIntoView({block:'center'})}
-$('foodForm').onsubmit=e=>{e.preventDefault();const name=$('fName').value.trim();if(!name)return;const old=foods.find(f=>f.id===editingFoodId)||foods.find(f=>f.name===name);const food={...old,id:old?.id||uid(),name,unit:$('fUnit').value,kcal:numberOrNull($('fKcal').value),p:numberOrNull($('fProtein').value),min:numberOrNull($('fMin').value),notes:$('fNotes').value.trim(),source:'手动录入'};const i=foods.findIndex(f=>f.id===food.id);if(i>=0)foods[i]=food;else foods.push(food);save(FOODS_KEY,foods);resetFoodForm();$('foodEditor').open=false;renderFoods();renderDiary()};
+function editFood(id){const f=foods.find(x=>x.id===id);if(!f)return;editingFoodId=id;$('fName').value=f.name;$('fUnit').value=f.unit||'g';$('fKcal').value=f.kcal??'';$('fProtein').value=f.p??'';$('fMin').value=f.min??'';$('fNotes').value=f.notes||'';$('foodSubmit').textContent='保存修改';$('foodCancel').hidden=false;$('foodFormTitle').textContent='编辑常用内容';updateFoodUnit();$('foodEditor').showModal()}
+$('foodForm').onsubmit=e=>{e.preventDefault();const name=$('fName').value.trim();if(!name)return;const old=foods.find(f=>f.id===editingFoodId)||foods.find(f=>f.name===name);const food={...old,id:old?.id||uid(),name,unit:$('fUnit').value,kcal:numberOrNull($('fKcal').value),p:numberOrNull($('fProtein').value),min:numberOrNull($('fMin').value),notes:$('fNotes').value.trim(),source:'手动录入'};const i=foods.findIndex(f=>f.id===food.id);if(i>=0)foods[i]=food;else foods.push(food);save(FOODS_KEY,foods);resetFoodForm();$('foodEditor').close();renderFoods();renderDiary()};
 $('foodCancel').onclick=resetFoodForm;$('fUnit').onchange=updateFoodUnit;$('foodSearch').oninput=renderFoods;
 function saveMeal(item){const date=$('diaryDate').value||isoToday();const d=diaryEnsure(date);d.items.push({id:uid(),...item});save(DIARY_KEY,diary);renderDiary();render()}
 function pushDiaryItem(date,f,grams){const d=diaryEnsure(date);d.items.push({id:uid(),meal:'饮食',...makeFoodItem(f,grams)});save(DIARY_KEY,diary)}
 function recalcItem(item,amount){return resizeFoodItem(item,amount)}
-function addDiaryItem(){const f=currentFoodFromInput();if(!f){$('diaryFeedback').textContent='先选一个常用条目；不在库里的餐食可以在上方直接粗记。';return}saveMeal({meal:'饮食',...makeFoodItem(f,$('diaryGrams').value)});$('diaryGrams').value='';$('diaryFeedback').textContent='已记下。'}
+function addDiaryItem() {
+  const food = currentFoodFromInput();
+  if (!food) { $('diaryFeedback').textContent = '请选择常用食物'; return; }
+  saveMeal({meal: $('diaryMeal').value, ...makeFoodItem(food, $('diaryGrams').value)});
+  $('diarySection').close();
+}
+const mealSlots = ['早餐', '午餐', '晚餐', '加餐'];
+function openMeal(meal) {
+  $('quickMealForm').reset();
+  $('quickMealSlot').value = meal;
+  $('quickMealName').oninput();
+  $('quickMealSlot').onchange();
+  $('mealFeedback').textContent = '';
+  $('mealDialog').showModal();
+}
+$('quickMealSlot').onchange = () => { $('openDinner').hidden = $('quickMealSlot').value !== '晚餐'; };
+$('openDiaryLibrary').onclick = () => {
+  $('mealDialog').close();
+  $('diaryMeal').value = $('quickMealSlot').value;
+  $('diaryFood').value = '';
+  $('diaryGrams').value = '';
+  $('diaryFeedback').textContent = '';
+  updateGramsHint();
+  $('diarySection').showModal();
+};
+$('openDinner').onclick = () => { $('mealDialog').close(); $('dinnerDialog').showModal(); };
 function renderDiary() {
   const date = $('diaryDate').value || isoToday();
   const items = diaryGet(date)?.items || [];
@@ -332,17 +425,29 @@ function renderDiary() {
   const protein = summarizeProtein(items);
   const total = nutritionText(calories.kcal, protein.protein, calories.missing, protein.missing);
   $('diaryTotal').textContent = total ? (calories.manual ? '热量采用全天估算 · ' : '') + total : '';
-  $('diaryItems').innerHTML = items.map(item => {
+  function mealRow(item) {
     const nutrition = nutritionText(item.kcal, item.protein === undefined ? item.p : item.protein, item.partial, item.proteinPartial);
     const quantity = item.quantity ?? item.grams;
-    const meal = esc(item.meal || '饮食');
-    return `<div class="record-row"><div>${item.name ? `<small>${meal}</small>` : ''}
-      <div><strong>${item.name ? esc(item.name) : meal}</strong>${quantity != null ? ` · ${fmtG(quantity)} ${esc(item.unit || 'g')}` : ''}</div>
+    return `<div class="record-row"><div>
+      ${item.name ? `<strong>${esc(item.name)}</strong>` : ''}${quantity != null ? ` · ${fmtG(quantity)} ${esc(item.unit || 'g')}` : ''}
       ${item.details ? `<p>${esc(item.details)}</p>` : ''}
       ${item.notes ? `<p>${esc(item.notes)}</p>` : ''}
       <p class="notice">${nutrition || '未估算'}</p></div>
       <button class="danger mini" data-delitem="${esc(item.id)}" aria-label="删除这条饮食记录">删除</button></div>`;
-  }).join('') || '<p class="empty">当天还没有饮食记录</p>';
+  }
+  const groups = mealSlots.map(meal => [meal, items.filter(item => item.meal === meal)]);
+  const other = items.filter(item => !mealSlots.includes(item.meal));
+  if (other.length) groups.push(['其他', other]);
+  $('diaryItems').innerHTML = groups.map(([meal, records]) => {
+    const energy = summarizeItems(records);
+    const nutrients = summarizeProtein(records);
+    const totals = nutritionText(energy.kcal, nutrients.protein, energy.missing, nutrients.missing);
+    return `<section class="card meal-group"><div class="meal-head"><div><h2>${meal}</h2>
+      <small>${records.length > 1 ? totals : records.length ? '' : '暂无记录'}</small></div>
+      ${mealSlots.includes(meal) ? `<button class="ghost" data-meal="${meal}" aria-label="添加${meal}">＋</button>` : ''}
+      </div>${records.map(mealRow).join('')}</section>`;
+  }).join('');
+  $('diaryItems').querySelectorAll('[data-meal]').forEach(button => button.onclick = () => openMeal(button.dataset.meal));
   $('diaryItems').querySelectorAll('[data-delitem]').forEach(button => button.onclick = () => {
     const day = diaryGet(date);
     day.items = day.items.filter(item => item.id !== button.dataset.delitem);
@@ -363,7 +468,7 @@ $('dinnerVegetable').onchange=()=>{$('dinnerVegetableAmount').value=$('dinnerVeg
 $('dinnerMeat').onchange=()=>{$('dinnerMeatAmount').value=$('dinnerMeat').value==='usual-breast'?'100':'';updateDinnerPreview()};
 ['dinnerVegetableAmount','dinnerMeatAmount','dinnerEggs','dinnerMethod','dinnerCalories','dinnerProtein','dinnerExtra'].forEach(id=>{$(id).addEventListener('input',updateDinnerPreview);$(id).addEventListener('change',updateDinnerPreview)});
 document.querySelectorAll('[data-meat-amount]').forEach(b=>b.onclick=()=>{$('dinnerMeatAmount').value=b.dataset.meatAmount;updateDinnerPreview()});
-$('dinnerForm').onsubmit=e=>{e.preventDefault();saveMeal(dinnerItem(dinnerSelection(),dinnerFoods()));$('dinnerCalories').value='';$('dinnerProtein').value='';$('dinnerFeedback').textContent='晚餐已记下。';updateDinnerPreview()};
+$('dinnerForm').onsubmit=e=>{e.preventDefault();saveMeal(dinnerItem(dinnerSelection(),dinnerFoods()));$('dinnerCalories').value='';$('dinnerProtein').value='';$('dinnerFeedback').textContent='';updateDinnerPreview();$('dinnerDialog').close()};
 $('saveDinnerDefault').onclick=()=>{const d=dinnerSelection();delete d.kcal;delete d.protein;delete d.notes;d.method=$('dinnerMethod').value;localStorage.setItem(DINNER_KEY,JSON.stringify(d));$('dinnerFeedback').textContent='已保存常用组合，下次打开会带入。'};
 $('quickMealName').oninput = () => {
   const remember = $('quickMealRemember');
@@ -394,6 +499,7 @@ $('quickMealForm').onsubmit = event => {
   $('quickMealSlot').value = meal;
   $('quickMealName').oninput();
   $('mealFeedback').textContent = '已保存';
+  $('mealDialog').close();
 };
 $('diaryDate').onchange=()=>{$('mealFeedback').textContent='';renderDiary()};$('diaryAdd').onclick=addDiaryItem;$('diaryFood').oninput=updateGramsHint;$('diaryFood').onchange=updateGramsHint;
 $('loadDefault').onclick=()=>{const missing=DEFAULT_FOODS.filter(d=>!foods.some(f=>f.id===d.id||f.name===d.name));mergeFoods(missing.map(f=>({...f})));renderFoods();};
@@ -413,39 +519,42 @@ function personalMetric(w){return ['floors','interval','seconds','reps','minutes
 function doneFor(date){return doneLog[date]||{}}
 function setDone(id,val,date){date=date||isoToday();if(!doneLog[date])doneLog[date]={};if(val)doneLog[date][id]=true;else delete doneLog[date][id];if(!Object.keys(doneLog[date]).length)delete doneLog[date];save(DONE_KEY,doneLog)}
 function resetWorkoutForm(){editingWorkoutId=null;$('workoutForm').reset();$('workoutSubmit').textContent='添加运动项目';$('workoutCancel').hidden=true;$('workoutFormTitle').textContent='添加运动项目'}
-function editWorkout(id){const w=workouts.find(x=>x.id===id);if(!w)return;editingWorkoutId=id;$('wName').value=w.name;$('wType').value=personalMetric(w);$('wNotes').value=w.notes||'';$('workoutSubmit').textContent='保存修改';$('workoutCancel').hidden=false;$('workoutFormTitle').textContent='编辑常用运动';$('workoutForm').closest('details').open=true;$('workoutForm').scrollIntoView({block:'center'})}
+function editWorkout(id){const w=workouts.find(x=>x.id===id);if(!w)return;editingWorkoutId=id;$('wName').value=w.name;$('wType').value=personalMetric(w);$('wNotes').value=w.notes||'';$('workoutSubmit').textContent='保存修改';$('workoutCancel').hidden=false;$('workoutFormTitle').textContent='编辑常用运动';$('workoutForm').scrollIntoView({block:'center'})}
 function activityDescription(a){if(a.amount!=null)return fmtG(a.amount)+' '+esc(a.unit||'次')+(a.type==='interval'?' · 每轮走 '+a.walkMinutes+' 分钟、跑 '+a.runMinutes+' 分钟，共 '+fmtG(a.minutes)+' 分钟':a.minutes!=null&&a.unit!=='分钟'&&a.unit!=='秒'?' · '+fmtG(a.minutes)+' 分钟':'');return a.reps?fmtG(a.reps)+' 次'+(a.weight?' × '+fmtG(a.weight)+' kg':''):'已完成'}
 function dailyActivityCount(date){const logs=lifts.filter(l=>l.date===date);const logged=new Set(logs.map(l=>l.workoutId));return logs.length+Object.keys(doneFor(date)).filter(id=>!logged.has(id)).length}
-function recordActivity(id){const w=workouts.find(w=>w.id===id);if(!w)return;const form=$('activity-'+id);try{const result=activityResult({...w,type:personalMetric(w)},{amount:form.querySelector('[name=amount]').value,minutes:form.querySelector('[name=minutes]')?.value,walkMinutes:form.querySelector('[name=walk]')?.value,runMinutes:form.querySelector('[name=run]')?.value,kcal:form.querySelector('[name=kcal]').value,notes:form.querySelector('[name=notes]').value});const date=$('workoutDate').value||isoToday();lifts.push({id:uid(),date,...result});save(LIFTS_KEY,lifts);setDone(id,true,date);renderWorkouts();render()}catch(error){form.querySelector('[role=status]').textContent=error.message}}
-function renderWorkouts() {
-  const date = $('workoutDate').value || isoToday();
-  const labels = {floors: '层数', interval: '轮数', seconds: '秒数', reps: '次数', minutes: '分钟'};
-  $('workoutBody').innerHTML = workouts.map(workout => {
+function recordActivity(id){const w=workouts.find(w=>w.id===id);if(!w)return;const form=$('activity-'+id);try{const result=activityResult({...w,type:personalMetric(w)},{amount:form.querySelector('[name=amount]').value,minutes:form.querySelector('[name=minutes]')?.value,walkMinutes:form.querySelector('[name=walk]')?.value,runMinutes:form.querySelector('[name=run]')?.value,kcal:form.querySelector('[name=kcal]').value,notes:form.querySelector('[name=notes]').value});const date=$('workoutDate').value||isoToday();lifts.push({id:uid(),date,...result});save(LIFTS_KEY,lifts);setDone(id,true,date);$('activityDialog').close();renderWorkouts();render()}catch(error){form.querySelector('[role=status]').textContent=error.message}}
+const activityLabels = {floors: '层数', interval: '轮数', seconds: '秒数', reps: '次数', minutes: '分钟'};
+function openActivity(workoutId) {
+    const workout = workouts.find(item => item.id === workoutId);
+    if (!workout) return;
     const id = esc(workout.id);
     const type = personalMetric(workout);
     const interval = type === 'interval';
-    return `<details class="compact" name="activity"><summary>${esc(workout.name)}</summary>
+    $('activityTitle').textContent = workout.name;
+    $('activityEditor').innerHTML = `
       <form id="activity-${id}" data-activity="${id}" class="formgrid">
-        <div class="field"><label for="amount-${id}">${labels[type]}</label>
+        <div class="field"><label for="amount-${id}">${activityLabels[type]}</label>
           <input id="amount-${id}" name="amount" type="number" min="0.1" step="any" inputmode="decimal" required></div>
-        ${interval ? '<p class="notice">默认每轮走 2 分钟，跑 1 分钟</p>' : ''}
-        <details class="activity-options"><summary>更多选项</summary><div class="formgrid">
           ${interval ? `<div class="field"><label for="walk-${id}">走（分钟／轮）</label><input id="walk-${id}" name="walk" type="number" min="0.1" step="any" value="2"></div>
           <div class="field"><label for="run-${id}">跑（分钟／轮）</label><input id="run-${id}" name="run" type="number" min="0.1" step="any" value="1"></div>` : ''}
           ${type === 'floors' ? `<div class="field"><label for="minutes-${id}">用时（分钟）</label><input id="minutes-${id}" name="minutes" type="number" min="0" step="any" inputmode="decimal"></div>` : ''}
-          <div class="field"><label for="kcal-${id}">消耗（kcal）</label><input id="kcal-${id}" name="kcal" type="number" min="0" inputmode="numeric"></div>
-          <div class="field"><label for="notes-${id}">备注</label><input id="notes-${id}" name="notes" placeholder="${esc(workout.notes || '')}"></div>
-        </div></details>
-        <div class="actions"><button class="primary" type="submit">保存</button>
-          <button class="mini" type="button" data-wedit="${id}">编辑项目</button></div>
+          <div class="field"><label for="kcal-${id}">消耗（kcal）</label><input id="kcal-${id}" name="kcal" type="number" min="0" inputmode="numeric" placeholder="选填"></div>
+          <div class="field"><label for="notes-${id}">备注</label><input id="notes-${id}" name="notes" placeholder="${esc(workout.notes || '选填')}"></div>
+        <div class="actions"><button class="primary" type="submit">保存运动</button></div>
         <p class="notice" role="status"></p>
-      </form></details>`;
-  }).join('') || '<p class="empty">还没有常用运动</p>';
-  $('workoutBody').querySelectorAll('[data-activity]').forEach(form => form.onsubmit = event => {
-    event.preventDefault();
-    recordActivity(form.dataset.activity);
-  });
-  $('workoutBody').querySelectorAll('[data-wedit]').forEach(button => button.onclick = () => editWorkout(button.dataset.wedit));
+      </form>`;
+    $('activity-' + workoutId).onsubmit = event => {
+      event.preventDefault();
+      recordActivity(workoutId);
+    };
+    $('activityDialog').showModal();
+}
+function renderWorkouts() {
+  const date = $('workoutDate').value || isoToday();
+  $('workoutBody').innerHTML = workouts.map(workout => `<button class="ghost choice" data-activity="${esc(workout.id)}">${esc(workout.name)}<small>${activityLabels[personalMetric(workout)]}</small></button>`).join('') || '<p class="empty">还没有常用运动</p>';
+  $('workoutBody').querySelectorAll('[data-activity]').forEach(button => button.onclick = () => openActivity(button.dataset.activity));
+  $('workoutEditList').innerHTML = workouts.map(workout => `<button class="ghost mini" data-wedit="${esc(workout.id)}">编辑${esc(workout.name)}</button>`).join('');
+  $('workoutEditList').querySelectorAll('[data-wedit]').forEach(button => button.onclick = () => editWorkout(button.dataset.wedit));
   const logs = lifts.filter(log => log.date === date);
   $('activityHistory').innerHTML = logs.map(log => `<div class="record-row"><div>
     <strong>${esc(log.name)}</strong><p>${activityDescription(log)}</p>
@@ -494,22 +603,21 @@ function syncCaloriesFromDiary(){const e=entryFor($('date').value);$('weight').v
 $('date').value=isoToday();$('diaryDate').value=isoToday();$('workoutDate').value=isoToday();
 
 $('date').onchange=()=>{$('entryFeedback').textContent='';syncCaloriesFromDiary()};
-function saveDailyEntry(changes) {
-  const date = $('date').value;
+function saveDailyEntry(date, changes) {
   if (!date) {
     $('entryFeedback').textContent = '请选择日期';
     return;
   }
   const index = entries.findIndex(entry => entry.date === date);
   const old = entries[index];
-  if (!old && changes.calories === null) return;
+  if (!old && changes.calories === null) return true;
   const item = {...(old || {id: uid(), date, weight: null, calories: null, type: 'personal'}), ...changes};
   if (index >= 0) entries[index] = item;
   else entries.push(item);
   save(KEY, entries);
   renderDiary();
   render();
-  $('entryFeedback').textContent = '已保存';
+  return true;
 }
 $('save').onclick = () => {
   const weight = numberOrNull($('weight').value);
@@ -517,13 +625,15 @@ $('save').onclick = () => {
     $('entryFeedback').textContent = '请填写体重';
     return;
   }
-  saveDailyEntry({weight});
+  if (saveDailyEntry($('date').value, {weight})) $('weightDialog').close();
 };
-$('saveCalories').onclick = () => saveDailyEntry({calories: numberOrNull($('calories').value)});
+$('saveCalories').onclick = () => {
+  if (saveDailyEntry($('diaryDate').value || isoToday(), {calories: numberOrNull($('calories').value)})) $('caloriesDialog').close();
+};
 $('clear').onclick=()=>{if(confirm('清空体重和饮食日记？常用库与运动记录会保留。')){entries=[];diary={};save(KEY,entries);save(DIARY_KEY,diary);render();renderDiary()}};
 
-function backupData(){return{app:'ricomposizione-tracker',version:5,dinnerDefault:load(DINNER_KEY,null),exportedAt:new Date().toISOString(),entries,foods,diary,workouts,lifts,done:doneLog,meta}}
-function applyBackup(b){if(Object.hasOwn(b,'dinnerDefault'))localStorage.setItem(DINNER_KEY,JSON.stringify(b.dinnerDefault));syncing=true;try{entries=Array.isArray(b.entries)?b.entries:[];foods=Array.isArray(b.foods)?b.foods:[];diary=b.diary&&typeof b.diary==='object'?b.diary:{};workouts=Array.isArray(b.workouts)?b.workouts:[];lifts=Array.isArray(b.lifts)?b.lifts:[];doneLog=b.done&&typeof b.done==='object'?b.done:{};meta=normalizeMeta(b.meta);save(KEY,entries);save(FOODS_KEY,foods);save(DIARY_KEY,diary);save(WORKOUTS_KEY,workouts);save(LIFTS_KEY,lifts);save(DONE_KEY,doneLog);persistMeta()}finally{syncing=false}restoreDinner();syncCaloriesFromDiary();renderFoods();renderDiary();renderWorkouts();render()}
+function backupData(){return{app:'ricomposizione-tracker',version:5,dinnerDefault:load(DINNER_KEY,null),calorieGoal:load('daily_calorie_goal',null),exportedAt:new Date().toISOString(),entries,foods,diary,workouts,lifts,done:doneLog,meta}}
+function applyBackup(b){if(Object.hasOwn(b,'calorieGoal'))save('daily_calorie_goal',b.calorieGoal);if(Object.hasOwn(b,'dinnerDefault'))localStorage.setItem(DINNER_KEY,JSON.stringify(b.dinnerDefault));syncing=true;try{entries=Array.isArray(b.entries)?b.entries:[];foods=Array.isArray(b.foods)?b.foods:[];diary=b.diary&&typeof b.diary==='object'?b.diary:{};workouts=Array.isArray(b.workouts)?b.workouts:[];lifts=Array.isArray(b.lifts)?b.lifts:[];doneLog=b.done&&typeof b.done==='object'?b.done:{};meta=normalizeMeta(b.meta);save(KEY,entries);save(FOODS_KEY,foods);save(DIARY_KEY,diary);save(WORKOUTS_KEY,workouts);save(LIFTS_KEY,lifts);save(DONE_KEY,doneLog);persistMeta()}finally{syncing=false}restoreDinner();syncCaloriesFromDiary();renderFoods();renderDiary();renderWorkouts();render()}
 $('exportBackup').onclick=()=>download('健身记录-备份-'+isoToday()+'.json',JSON.stringify(backupData(),null,1),'application/json');
 $('importBackup').onchange=e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const b=JSON.parse(String(reader.result));if(!b||typeof b!=='object'||!('entries' in b||'diary' in b||'foods' in b))throw new Error("备份文件无效");if(!confirm("确定导入备份吗？这会替换当前数据。"))return;applyBackup(b);if(!b.meta)syncStampAll(Date.now());seedOutbox();schedulePush();updateSyncStatus();alert("备份已导入："+entries.length+" 条体重记录，"+foods.length+" 项食物，"+Object.keys(diary).length+" 天饮食日记。")}catch(err){alert("备份导入失败："+err.message)}};reader.readAsText(file,'utf-8');e.target.value=''};
 
@@ -618,25 +728,57 @@ function initSync(){const c=syncCfg();$('syncUrl').value=c.url||'';$('syncKey').
 
 
 /* ---------- Grafico ---------- */
-function drawChart(data){const c=$('chart'),r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=r.width*dpr;c.height=r.height*dpr;const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const w=r.width,h=r.height,p={l:42,r:14,t:18,b:30};ctx.clearRect(0,0,w,h);if(data.length===0)return;const vals=data.map(x=>x.weight),min=Math.min(...vals)-.5,max=Math.max(...vals)+.5;const x=i=>p.l+(i/(Math.max(1,data.length-1)))*(w-p.l-p.r),y=v=>p.t+(1-(v-min)/(max-min))*(h-p.t-p.b);ctx.strokeStyle='rgba(148,163,184,.25)';ctx.lineWidth=1;for(let i=0;i<4;i++){const yy=p.t+i*(h-p.t-p.b)/3;ctx.beginPath();ctx.moveTo(p.l,yy);ctx.lineTo(w-p.r,yy);ctx.stroke();ctx.fillStyle=(getComputedStyle(document.body).color||'#94a3b8');ctx.font='11px system-ui';ctx.fillText((max-(max-min)*i/3).toFixed(1),4,yy+4)}ctx.strokeStyle=(getComputedStyle($('save')).backgroundColor||'#60a5fa');ctx.lineWidth=3;ctx.lineJoin='round';ctx.beginPath();data.forEach((e,i)=>{const xx=x(i),yy=y(e.weight);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke();ctx.fillStyle=(getComputedStyle($('save')).backgroundColor||'#60a5fa');data.forEach((e,i)=>{ctx.beginPath();ctx.arc(x(i),y(e.weight),4,0,Math.PI*2);ctx.fill()});ctx.fillStyle=(getComputedStyle(document.body).color||'#94a3b8');ctx.font='11px system-ui';ctx.fillText(fmtDate(data[0].date),p.l,h-7);ctx.fillText(fmtDate(data[data.length-1].date),Math.max(p.l,w-p.r-70),h-7)}
+function drawChart(data, canvasId='chart'){const c=$(canvasId),r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;if (!r.width || !r.height) return;c.width=r.width*dpr;c.height=r.height*dpr;const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const w=r.width,h=r.height,p={l:42,r:14,t:18,b:30};ctx.clearRect(0,0,w,h);if(data.length===0)return;const vals=data.map(x=>x.weight),min=Math.min(...vals)-.5,max=Math.max(...vals)+.5;const x=i=>p.l+(i/(Math.max(1,data.length-1)))*(w-p.l-p.r),y=v=>p.t+(1-(v-min)/(max-min))*(h-p.t-p.b);ctx.strokeStyle='rgba(148,163,184,.25)';ctx.lineWidth=1;for(let i=0;i<4;i++){const yy=p.t+i*(h-p.t-p.b)/3;ctx.beginPath();ctx.moveTo(p.l,yy);ctx.lineTo(w-p.r,yy);ctx.stroke();ctx.fillStyle=(getComputedStyle(document.body).color||'#94a3b8');ctx.font='12px system-ui';ctx.fillText((max-(max-min)*i/3).toFixed(1),4,yy+4)}ctx.strokeStyle=(getComputedStyle($('save')).backgroundColor||'#60a5fa');ctx.lineWidth=3;ctx.lineJoin='round';ctx.beginPath();data.forEach((e,i)=>{const xx=x(i),yy=y(e.weight);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke();ctx.fillStyle=(getComputedStyle($('save')).backgroundColor||'#60a5fa');data.forEach((e,i)=>{ctx.beginPath();ctx.arc(x(i),y(e.weight),4,0,Math.PI*2);ctx.fill()});ctx.fillStyle=(getComputedStyle(document.body).color||'#94a3b8');ctx.font='12px system-ui';ctx.fillText(fmtDate(data[0].date),p.l,h-7);ctx.fillText(fmtDate(data[data.length-1].date),Math.max(p.l,w-p.r-70),h-7)}
 
 function weightEntries(){return entries.filter(e=>numberOrNull(e.weight)>0).slice().sort((a,b)=>a.date.localeCompare(b.date))}
-function recentDateStart(){const d=new Date();d.setDate(d.getDate()-6);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function recentDateStart(days=7){const d=new Date();d.setDate(d.getDate()-days+1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+let trendDays = 30;
+function renderTrend() {
+  const weights = weightEntries();
+  const recent = trendDays ? weights.filter(entry => entry.date >= recentDateStart(trendDays)) : weights;
+  $('trendChartWrap').hidden = recent.length < 2;
+  if (recent.length < 2) {
+    $('trendSummary').textContent = recent.length ? '这段时间记录了 1 次体重' : '这段时间没有体重记录';
+    return;
+  }
+  const change = recent.at(-1).weight - recent[0].weight;
+  $('trendSummary').textContent = recent.length + ' 次记录 · 变化 ' + (change > 0 ? '+' : '') + fmt1(change) + ' kg';
+  drawChart(recent, 'trendChart');
+}
+document.querySelectorAll('[data-days]').forEach(button => button.onclick = () => {
+  trendDays = Number(button.dataset.days);
+  document.querySelectorAll('[data-days]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+  renderTrend();
+});
 function render() {
   const today = isoToday();
   const weights = weightEntries();
   const recent = weights.filter(entry => entry.date >= recentDateStart() && entry.date <= today);
   $('currentWeight').textContent = weights.length ? fmt1(weights.at(-1).weight) + ' kg' : '—';
   $('weightChart').hidden = weights.length < 2;
+  $('weightEmpty').hidden = weights.length >= 2;
   $('avgWeight').textContent = recent.length ? '近 7 天均重 ' + fmt1(recent.reduce((sum, entry) => sum + Number(entry.weight), 0) / recent.length) + ' kg' : '';
 
   const items = diaryGet(today)?.items || [];
   const calories = summarizeDay(entryFor(today), items);
   const protein = summarizeProtein(items);
-  $('todayCalories').textContent = calories.kcal == null ? '—' : calories.kcal + ' kcal';
+  $('homeDate').textContent = new Intl.DateTimeFormat('zh-CN', {month: 'long', day: 'numeric', weekday: 'short'}).format(new Date());
+  $('todayCalories').textContent = calories.kcal ?? '—';
   $('todayProtein').textContent = protein.protein == null ? '—' : proteinText(protein.protein);
   $('todayCoverage').textContent = calories.manual ? '全天估算' : calories.kcal != null && calories.missing ? '部分合计' : '';
   $('todayProteinCoverage').textContent = protein.protein != null && protein.missing ? '部分合计' : '';
+  const activityCount = dailyActivityCount(today);
+  $('homeActivity').textContent = activityCount ? activityCount + ' 次' : '未记录';
+  const goal = numberOrNull(load('daily_calorie_goal', null));
+  const progress = goal ? Math.min(100, 100 * (calories.kcal ?? 0) / goal) : 0;
+  $('energyRing').style.backgroundImage = goal ? 'conic-gradient(var(--accent) ' + progress + '%, var(--surface2) 0)' : '';
+  const difference = goal - calories.kcal;
+  let goalStatus = goal ? '目标 ' + goal + ' kcal' : '';
+  if (goal && calories.kcal != null) {
+    goalStatus += difference === 0 ? ' · 达到目标' : ' · ' + (difference > 0 ? '还差 ' : '超出 ') + Math.abs(difference) + ' kcal';
+  }
+  $('goalStatus').textContent = goalStatus;
+  $('openGoal').textContent = goal ? '修改目标' : '设置热量目标';
 
   const days = [...new Set([...entries.map(entry => entry.date), ...Object.keys(diary), ...lifts.map(log => log.date), ...Object.keys(doneLog)])].filter(Boolean).sort().reverse();
   $('rows').innerHTML = days.map(date => {
@@ -659,12 +801,23 @@ function render() {
     syncCaloriesFromDiary();
     renderDiary();
     renderWorkouts();
-    showTab(diaryGet(date)?.items.length ? 'diary' : dailyActivityCount(date) ? 'workouts' : 'dashboard');
+    if (diaryGet(date)?.items.length || numberOrNull(entryFor(date)?.calories) != null) showTab('diary');
+    else if (dailyActivityCount(date)) showTab('workouts');
+    else {
+      showTab('dashboard');
+      $('entryFeedback').textContent = '';
+      $('weightDialog').showModal();
+    }
+    window.scrollTo(0, 0);
   });
   if (currentTab === 'dashboard' && weights.length >= 2) drawChart(weights);
+  if (currentTab === 'history') renderTrend();
 }
 
-window.addEventListener('resize',()=>{if(currentTab==='dashboard'&&!$('weightChart').hidden)drawChart(weightEntries())});
+window.addEventListener('resize', () => {
+  if (currentTab === 'dashboard' && !$('weightChart').hidden) drawChart(weightEntries());
+  if (currentTab === 'history') renderTrend();
+});
 /* ---------- Separatore decimale: sempre "." ---------- */
 function normalizeDecimal(el){const v=el.value;let s=v.replace(/[^\d.,]/g,'');const lc=s.lastIndexOf(','),ld=s.lastIndexOf('.');if(lc>=0&&ld>=0){s=lc>ld?s.replace(/\./g,'').replace(/,/g,'.'):s.replace(/,/g,'')}else if(lc>=0){s=s.replace(/,/g,'.')}const i=s.indexOf('.');if(i>=0)s=s.slice(0,i+1)+s.slice(i+1).replace(/\./g,'');if(s!==v)el.value=s}
 function normalizeInt(el){const s=el.value.replace(/[^\d]/g,'');if(s!==el.value)el.value=s}
