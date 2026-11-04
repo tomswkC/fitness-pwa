@@ -6,9 +6,13 @@
     return Number.isFinite(n) && n >= 0 ? n : null;
   }
   function foodAmountCalories(food, amount) {
-    const kcal = numberOrNull(food.kcal), quantity = numberOrNull(amount);
-    if (kcal == null || quantity == null || quantity <= 0) return null;
-    return Math.round(kcal * quantity / ((food.unit || 'g') === 'g' ? 100 : 1));
+    const value = scaleFoodValue(food.kcal, amount, food.unit);
+    return value == null ? null : Math.round(value);
+  }
+  function scaleFoodValue(value, amount, unit) {
+    const base = numberOrNull(value), quantity = numberOrNull(amount);
+    if (base == null || quantity == null || quantity <= 0) return null;
+    return base * quantity / ((unit || 'g') === 'g' ? 100 : 1);
   }
   function summarizeItems(items) {
     let kcal = 0, known = 0, missing = 0;
@@ -24,10 +28,20 @@
     const sum = summarizeItems(items);
     return manual != null ? {...sum, kcal: manual, missing: 0, manual: true} : {...sum, manual: false};
   }
+  function summarizeProtein(items) {
+    let total = 0, known = 0, missing = 0;
+    for (const item of items) {
+      const value = numberOrNull(item.protein === undefined ? item.p : item.protein);
+      if (value != null) { total += value; known++; }
+      if (value == null || item.proteinPartial) missing++;
+    }
+    return {protein: known ? total : null, missing};
+  }
   function makeFoodItem(food, amount) {
     const quantity = numberOrNull(amount), unit = food.unit || 'g';
     return {foodId: food.id, name: food.name, quantity, grams: unit === 'g' ? quantity : null,
       unit, kcal: foodAmountCalories(food, quantity), baseKcal: numberOrNull(food.kcal),
+      protein: scaleFoodValue(food.p, quantity, unit), baseProtein: numberOrNull(food.p),
       notes: food.notes || '', source: food.source || '常用库估算'};
   }
   function resizeFoodItem(item, amount) {
@@ -36,7 +50,10 @@
     const unit = item.unit || 'g';
     const baseKcal = item.baseKcal !== undefined ? numberOrNull(item.baseKcal) :
       oldAmount > 0 && numberOrNull(item.kcal) != null ? item.kcal / oldAmount * (unit === 'g' ? 100 : 1) : null;
-    return {...item, ...makeFoodItem({id: item.foodId, name: item.name, unit, kcal: baseKcal, notes: item.notes, source: item.source}, amount)};
+    const protein = numberOrNull(item.protein === undefined ? item.p : item.protein);
+    const baseProtein = item.baseProtein !== undefined ? numberOrNull(item.baseProtein) :
+      oldAmount > 0 && protein != null ? protein / oldAmount * (unit === 'g' ? 100 : 1) : null;
+    return {...item, ...makeFoodItem({id: item.foodId, name: item.name, unit, kcal: baseKcal, p: baseProtein, notes: item.notes, source: item.source}, amount)};
   }
   function dinnerItem(selection, foods) {
     const parts = [], items = [];
@@ -52,9 +69,11 @@
       parts.push(id === 'usual-eggs' ? '辣椒炒蛋（2个蛋）' : food.name + (item.quantity > 0 ? ` ${item.quantity}${item.unit}` : `（${fallback}）`));
     }
     const sum = summarizeItems(items), override = numberOrNull(selection.kcal);
+    const protein = summarizeProtein(items), proteinOverride = numberOrNull(selection.protein);
     return {name: '常用晚餐', meal: '晚餐', details: parts.join(' · '), components: items,
       kcal: override != null ? override : sum.kcal, partial: override == null && (sum.missing > 0 || !!selection.extra),
-      notes: selection.notes || '生重，少油', source: override != null ? '整餐粗估' : '常用库估算'};
+      protein: proteinOverride ?? protein.protein, proteinPartial: proteinOverride == null && (protein.missing > 0 || !!selection.extra),
+      notes: selection.notes || '生重，少油', source: override != null || proteinOverride != null ? '整餐粗估' : '常用库估算'};
   }
   function activityResult(workout, values) {
     const type = workout.type || 'minutes', amount = numberOrNull(values.amount);
@@ -71,7 +90,7 @@
       ...(type === 'interval' ? {walkMinutes, runMinutes} : {}),
       kcal: numberOrNull(values.kcal), notes: String(values.notes || '').trim()};
   }
-  const api = {numberOrNull, foodAmountCalories, summarizeItems, summarizeDay, makeFoodItem, resizeFoodItem, dinnerItem, activityResult};
+  const api = {numberOrNull, foodAmountCalories, summarizeItems, summarizeDay, summarizeProtein, makeFoodItem, resizeFoodItem, dinnerItem, activityResult};
   root.FitnessData = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(globalThis);

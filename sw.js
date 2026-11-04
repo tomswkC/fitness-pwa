@@ -7,12 +7,12 @@
 // offline edits and reconcile on the next sync.
 const SCOPE = new URL(self.registration.scope);
 const CACHE_PREFIX = `tracker-personal:${SCOPE.href}:`;
-const CACHE = `${CACHE_PREFIX}v4`;
+const CACHE = `${CACHE_PREFIX}v5`;
 const INDEX = new URL('index.html', SCOPE).href;
 const SHELL = [
   './',
   'index.html',
-  'personal-data.js',
+  'personal-data.js?v=5',
   'manifest.json',
   'favicon.svg',
   'favicon.ico',
